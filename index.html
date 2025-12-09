@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {},
+        plugins: [],
+      };
+    </script>
+
+    <title>Todo List</title>
+  </head>
+<body class="bg-gray-50 min-h-screen flex justify-center items-center p-4">
+
+    <div class="border shadow-gray-500 shadow-md max-w-2xl w-full p-6 rounded-lg bg-white">
+        <h1
+          class="text-4xl font-sans font-extrabold py-3 bg-clip-text text-transparent bg-black"
+        >
+          Todo List
+        </h1>
+
+        <!-- Todo Form -->
+        <div class="flex flex-col sm:flex-row mb-6 group gap-3 sm:gap-0">
+          <input
+            id="taskInput"
+            type="text"
+            placeholder="Add a new task..."
+            class="flex-1 px-4 py-3 rounded-lg sm:rounded-l-lg bg-gray-100 border border-gray-300
+                   focus:outline-none focus:border-gray-600 focus:ring-1 focus:ring-gray-600 transition-all duration-300"
+          />
+          <button
+            id="addTaskBtn"
+            class="px-5 py-3 rounded-lg sm:rounded-r-lg bg-gray-500 text-white transition-all duration-300"
+          >
+            Add
+          </button>
+        </div>
+
+        <!-- Task List -->
+        <div id="taskList" class="space-y-3 mb-6"></div>
+
+        <!-- Stats -->
+        <div class="p-4 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 border border-gray-300">
+          <div class="flex justify-between text-sm">
+            <div class="text-center">
+              <div id="pendingCount" class="text-2xl font-bold text-black">0</div>
+              <div class="text-gray-500">Pending</div>
+            </div>
+            <div class="text-center">
+              <div id="completedCount" class="text-2xl font-bold text-black">0</div>
+              <div class="text-gray-500">Completed</div>
+            </div>
+            <div class="text-center">
+              <div id="totalCount" class="text-2xl font-bold text-black">0</div>
+              <div class="text-gray-500">Total</div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+</body>
+
+  <script src="main.js"></script>
+</html>
