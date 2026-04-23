@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const completedCount = document.getElementById("completedCount");
   const totalCount = document.getElementById("totalCount");
 
+  let editIndex = null;
+  let filter = "all";
   let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
   function renderTasks() {
@@ -13,30 +15,54 @@ document.addEventListener("DOMContentLoaded", function () {
     let pending = 0;
     let completed = 0;
 
-    tasks.forEach((task, index) => {
+    let filteredTasks = tasks;
+
+    if (filter === "completed") {
+      filteredTasks = tasks.filter((task) => task.completed);
+    } else if (filter === "pending") {
+      filteredTasks = tasks.filter((task) => !task.completed);
+    }
+
+    filteredTasks.forEach((task) => {
+      const index = tasks.indexOf(task);
       const taskElement = document.createElement("div");
       taskElement.className = `flex items-center p-4 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:border-neon-blue hover:shadow-neon-sm transition-all duration-300 ${
         task.completed ? "opacity-60" : ""
       }`;
 
       taskElement.innerHTML = `
-                        <div class="flex items-center flex-1">
-                            <input 
-                                type="checkbox" 
-                                ${task.completed ? "checked" : ""}
-                                class="h-5 w-5 rounded border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700 text-neon-pink focus:ring-neon-pink mr-3 task-checkbox"
-                                data-index="${index}"
-                            >
-                            <span class="text-lg ${
-                              task.completed ? "line-through" : ""
-                            }">${task.text}</span>
-                        </div>
-                        <button class="text-gray-500 dark:text-gray-400 hover:text-neon-pink ml-2 delete-btn" data-index="${index}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    `;
+  <div class="flex items-center flex-1">
+    <input 
+      type="checkbox" 
+      ${task.completed ? "checked" : ""}
+      class="h-5 w-5 rounded border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-700 text-neon-pink focus:ring-neon-pink mr-3 task-checkbox"
+      data-index="${index}"
+    >
+    <span class="text-lg ${
+      task.completed ? "line-through" : ""
+    }">${task.text}</span>
+  </div>
+
+  <div class="flex items-center gap-2">
+<button class="text-blue-600 hover:text-blue-800 mr-2 edit-btn" data-index="${index}">
+  <svg class="w-6 h-6 pointer-events-none" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm18-11.5a1 1 0 000-1.41l-1.34-1.34a1 1 0 00-1.41 0l-1.13 1.13 2.75 2.75L21 5.75z"/>
+  </svg>
+</button>
+
+  <button class="text-gray-500 hover:text-red-500 ml-2 delete-btn" data-index="${index}">
+  <svg class="w-5 h-5 pointer-events-none" viewBox="0 0 24 24" fill="none">
+    <path 
+      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</button>
+</div>
+`;
 
       taskList.appendChild(taskElement);
 
@@ -54,12 +80,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function addTask() {
     const text = taskInput.value.trim();
-    if (text) {
+    if (!text) return;
+
+    if (editIndex !== null) {
+      // MODE EDIT
+      tasks[editIndex].text = text;
+      editIndex = null;
+    } else {
+      // MODE TAMBAH
       tasks.push({ text, completed: false });
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-      taskInput.value = "";
-      renderTasks();
     }
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    taskInput.value = "";
+    renderTasks();
   }
 
   addTaskBtn.addEventListener("click", addTask);
@@ -90,7 +124,22 @@ document.addEventListener("DOMContentLoaded", function () {
       localStorage.setItem("tasks", JSON.stringify(tasks));
       renderTasks();
     }
+
+    const editBtn = e.target.closest(".edit-btn");
+    if (editBtn) {
+      const index = editBtn.dataset.index;
+
+      taskInput.value = tasks[index].text;
+      editIndex = index;
+    }
   });
 
   renderTasks();
+
+  document.querySelectorAll(".filter-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      filter = this.dataset.filter;
+      renderTasks();
+    });
+  });
 });
