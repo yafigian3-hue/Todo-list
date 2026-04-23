@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const pendingCount = document.getElementById("pendingCount");
   const completedCount = document.getElementById("completedCount");
   const totalCount = document.getElementById("totalCount");
+  const clearCompletedBtn = document.getElementById("clearCompletedBtn");
 
   let editIndex = null;
   let filter = "all";
@@ -76,6 +77,14 @@ document.addEventListener("DOMContentLoaded", function () {
     pendingCount.textContent = pending;
     completedCount.textContent = completed;
     totalCount.textContent = tasks.length;
+
+    const hasCompleted = tasks.some((task) => completed);
+
+    if (hasCompleted) {
+      clearCompletedBtn.classList.remove("hidden");
+    } else {
+      clearCompletedBtn.classList.add("hidden");
+    }
   }
 
   function addTask() {
@@ -141,5 +150,15 @@ document.addEventListener("DOMContentLoaded", function () {
       filter = this.dataset.filter;
       renderTasks();
     });
+  });
+
+  clearCompletedBtn.addEventListener("click", function () {
+    const confirmDelete = confirm("Hapus semua task yang selesai?");
+    if (!confirmDelete) return;
+
+    tasks = tasks.filter((task) => !task.completed);
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTasks();
   });
 });

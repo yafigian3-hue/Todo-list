@@ -39,24 +39,34 @@
           Add
         </button>
       </div>
-      <div class="flex gap-2 mb-4 font-semibold">
+
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex gap-2 font-semibold">
+          <button
+            class="filter-btn px-3 py-1 bg-gray-300 rounded"
+            data-filter="all"
+          >
+            All
+          </button>
+          <button
+            class="filter-btn px-3 py-1 bg-gray-300 rounded"
+            data-filter="pending"
+          >
+            Pending
+          </button>
+          <button
+            class="filter-btn px-3 py-1 bg-gray-300 rounded"
+            data-filter="completed"
+          >
+            Completed
+          </button>
+        </div>
+
         <button
-          class="filter-btn px-3 py-1 bg-gray-300 rounded"
-          data-filter="all"
+          id="clearCompletedBtn"
+          class="px-4 py-3 rounded-lg sm:rounded-r-lg bg-red-500 text-white transition-all duration-300 hidden"
         >
-          All
-        </button>
-        <button
-          class="filter-btn px-3 py-1 bg-gray-300 rounded"
-          data-filter="pending"
-        >
-          Pending
-        </button>
-        <button
-          class="filter-btn px-3 py-1 bg-gray-300 rounded"
-          data-filter="completed"
-        >
-          Completed
+          Clear
         </button>
       </div>
 
